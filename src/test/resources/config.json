@@ -1,0 +1,35 @@
+{
+  "resources": {
+    "serverURL": "https://bitbucket.com",
+    "project": "PROJECTKEY",
+    "targetRepository": "backend"
+  },
+
+  "rules": {
+    "branchNamingPatterns": {
+      "MASTER": "master",
+      "DEVELOP": "dev",
+      "FEATURE": "feature\/{1,4}[a-zA-Z\\-]+",
+      "BUGFIX": "bugfix\/{1,4}[a-zA-Z\\-]+",
+      "DEVELOPER": "task\/{1,4}[a-zA-Z\\-]+"
+    },
+    "allowedBranchOrigins": {
+      "DEVELOP": ["MASTER"],
+      "FEATURE": ["DEVELOP"],
+      "BUGFIX": ["MASTER", "DEVELOP"],
+      "DEVELOPER": ["FEATURE"]
+    },
+    "allowedBranchMerges": {
+      "DEVELOP": ["MASTER"],
+      "FEATURE": ["DEVELOP"],
+      "BUGFIX": ["MASTER", "DEVELOP"],
+      "DEVELOPER": ["ORIGIN"]
+    },
+    "branchStalePeriods": {
+      "FEATURE": 90,
+      "BUGFIX": 14,
+      "DEVELOPER": 30
+    },
+    "branchRemovalAfterPRMerge": true
+  }
+}
