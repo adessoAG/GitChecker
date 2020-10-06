@@ -31,28 +31,28 @@ class ReadRulesetTest {
                         "DEVELOP",
                         "MASTER",
                         "FEATURE",
-                        "HOTFIX",
+                        "BUGFIX",
                         "DEVELOPER");
 
         assertThat(ruleset.getAllowedBranchOrigins())
                 .containsOnlyKeys(
                         "DEVELOP",
                         "FEATURE",
-                        "HOTFIX",
+                        "BUGFIX",
                         "DEVELOPER");
 
         assertThat(ruleset.getAllowedBranchMerges())
                 .containsOnlyKeys(
                         "DEVELOP",
                         "FEATURE",
-                        "HOTFIX",
+                        "BUGFIX",
                         "DEVELOPER");
 
         assertThat(ruleset.getBranchStalePeriods())
                 .containsOnly(
                         entry("FEATURE", 90),
-                        entry("HOTFIX", 30),
-                        entry("DEVELOPER", 14));
+                        entry("BUGFIX", 14),
+                        entry("DEVELOPER", 30));
     }
 }
 

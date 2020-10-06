@@ -23,12 +23,12 @@ class ReadResourcesTest {
 
         //Then
         assertThat(resources.getServerURL())
-                .isEqualTo("https://bitbucket.adesso-group.com");
+                .isNotEmpty();
 
         assertThat(resources.getProject().getKey())
-                .isEqualTo("PMD");
+                .isNotEmpty();
 
         assertThat(resources.getTargetRepository().getSlug())
-                .isEqualTo("backend");
+                .isNotEmpty();
     }
 }

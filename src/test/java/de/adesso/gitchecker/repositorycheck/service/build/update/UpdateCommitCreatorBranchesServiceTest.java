@@ -5,7 +5,10 @@ import de.adesso.gitchecker.repositorycheck.adapter.FindBitBucketCommitAdapter;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketResources;
 import de.adesso.gitchecker.repositorycheck.domain.Branch;
 import de.adesso.gitchecker.repositorycheck.domain.Commit;
+import de.adesso.gitchecker.repositorycheck.utils.BitBucketServerDummy;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +17,6 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
@@ -30,6 +32,18 @@ class UpdateCommitCreatorBranchesServiceTest {
     private FindBitBucketBranchAdapter findBranches;
     @Autowired
     private BitBucketResources resources;
+    @Autowired
+    private BitBucketServerDummy serverDummy;
+
+    @BeforeEach
+    void setUp() {
+        serverDummy.init();
+    }
+
+    @AfterEach
+    void shutDown() {
+        serverDummy.kill();
+    }
 
     @Test
     void allCommitBeingAssignedToBranch() {
@@ -76,7 +90,7 @@ class UpdateCommitCreatorBranchesServiceTest {
         resources.getTargetRepository().getBranches().values().forEach(branch ->
                         branchCommitChain(branch, branchPointCommits).stream()
                                 .filter(commit -> !commit.getCreatorBranch().equals(branch))
-                                .forEach(parent -> System.out.println(parent.getAuthorName() + " " + parent.getId().substring(0, 5) + " " + parent.getCreatorBranch().getName() + " " + parent.getMessage().replace("\n", " "))));
+                                .forEach(parent -> System.out.println(branch.getName() + ": " + parent.getAuthorName() + " " + parent.getId().substring(0, 5) + " " + parent.getCreatorBranch().getName() + " " + parent.getMessage().replace("\n", " "))));
 
         Assertions.assertThat(wrongAssignedCommits).isEqualTo(0);
     }
@@ -89,29 +103,5 @@ class UpdateCommitCreatorBranchesServiceTest {
             commit = commit.getParentCommits().size() == 0 ? null : commit.getParentCommits().get(0);
         }
         return branchCommits;
-    }
-
-    @Test
-    void printBranchFromCommit() {
-        //Given
-        String fromCommitId = "";
-        resources.getTargetRepository().setBranches(findBranches.byRepository(resources.getTargetRepository()));
-        Map<String, Commit> commits = findCommits.byRepository(resources.getTargetRepository());
-        resources.getTargetRepository().setCommits(commits);
-        linkCommits.link(resources.getTargetRepository());
-
-        //When
-        commitCreatorBranches.update(resources.getTargetRepository());
-
-        //Then
-        resources.getTargetRepository().getCommits().values().stream()
-                .filter(commit -> commit.getId().startsWith(fromCommitId))
-                .forEach(commit -> {
-                    while (Objects.nonNull(commit)) {
-                        System.out.println(commit.getId().substring(0, 6) + " " + commit.getCreatorBranch().getBranchType() + " " + commit.getCreatorBranch().getName() + " " + commit.getMessage().replace("\n", " "));
-                        commit = commit.getParentCommits().get(0);
-
-                    }
-                });
     }
 }

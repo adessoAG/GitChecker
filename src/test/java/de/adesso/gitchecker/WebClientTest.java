@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adesso.gitchecker.repositorycheck.domain.*;
+import de.adesso.gitchecker.repositorycheck.utils.BitBucketServerDummy;
 import de.adesso.gitchecker.repositorycheck.utils.WebUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,16 +21,28 @@ import reactor.core.publisher.Mono;
 class WebClientTest {
 
   @Autowired
+  private WebClient client;
+  @Autowired
   private ObjectMapper mapper;
   @Autowired
   private WebUtils webUtils;
+  @Autowired
+  private BitBucketServerDummy serverDummy;
+
+  @BeforeEach
+  void setUp() {
+    serverDummy.init();
+  }
+
+  @AfterEach
+  void shutDown() {
+    serverDummy.kill();
+  }
 
   @Test
   public void fetchBitBucketProject() throws JsonProcessingException {
 
-    WebClient client = WebClient.create("https://bitbucket.adesso-group.com");
-
-    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects").header("Authorization", webUtils.getBasicAuthString()).exchange();
+    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/").header("Authorization", webUtils.getBasicAuthString()).exchange();
     String result = response.flatMap(res -> res.bodyToMono(String.class)).block();
 
     BitBucketPagingResponse b = mapper.readValue(result, new TypeReference<BitBucketPagingResponse<BitBucketProject>>(){});
@@ -37,9 +52,7 @@ class WebClientTest {
   @Test
   public void fetchBitBucketRepository() throws JsonProcessingException {
 
-    WebClient client = WebClient.create("https://bitbucket.adesso-group.com");
-
-    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PMD/repos").header("Authorization", webUtils.getBasicAuthString()).exchange();
+    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PROJECTKEY/repos/").header("Authorization", webUtils.getBasicAuthString()).exchange();
     String result = response.flatMap(res -> res.bodyToMono(String.class)).block();
     BitBucketPagingResponse b = mapper.readValue(result, new TypeReference<BitBucketPagingResponse<BitBucketRepository>>(){});
 
@@ -49,9 +62,7 @@ class WebClientTest {
   @Test
   public void fetchBitBucketBranches() throws JsonProcessingException {
 
-    WebClient client = WebClient.create("https://bitbucket.adesso-group.com");
-
-    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PMD/repos/backend/branches").header("Authorization", webUtils.getBasicAuthString()).exchange();
+    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PROJECTKEY/repos/backend/branches/").header("Authorization", webUtils.getBasicAuthString()).exchange();
     String result = response.flatMap(res -> res.bodyToMono(String.class)).block();
     BitBucketPagingResponse b = mapper.readValue(result, new TypeReference<BitBucketPagingResponse>(){});
 
@@ -61,9 +72,7 @@ class WebClientTest {
   @Test
   public void fetchBitBucketCommits() throws JsonProcessingException {
 
-    WebClient client = WebClient.create("https://bitbucket.adesso-group.com");
-
-    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PMD/repos/backend/commits").header("Authorization", webUtils.getBasicAuthString()).exchange();
+    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PROJECTKEY/repos/backend/commits/").header("Authorization", webUtils.getBasicAuthString()).exchange();
     String result = response.flatMap(res -> res.bodyToMono(String.class)).block();
     BitBucketPagingResponse b = mapper.readValue(result, new TypeReference<BitBucketPagingResponse<Commit>>(){});
 
@@ -73,9 +82,7 @@ class WebClientTest {
   @Test
   public void fetchBitBucketPullRequests() throws JsonProcessingException {
 
-    WebClient client = WebClient.create("https://bitbucket.adesso-group.com");
-
-    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PMD/repos/backend/pull-requests?state=ALL").header("Authorization", webUtils.getBasicAuthString()).exchange();
+    Mono<ClientResponse> response = client.get().uri("/rest/api/1.0/projects/PROJECTKEY/repos/backend/pull-requests/?state=ALL").header("Authorization", webUtils.getBasicAuthString()).exchange();
     String result = response.flatMap(res -> res.bodyToMono(String.class)).block();
     BitBucketPagingResponse b = mapper.readValue(result, new TypeReference<BitBucketPagingResponse<PullRequest>>(){});
 

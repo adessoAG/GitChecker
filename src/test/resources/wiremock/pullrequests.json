@@ -1,0 +1,111 @@
+{
+  "size": 1,
+  "limit": 100,
+  "isLastPage": true,
+  "values": [
+    {
+      "id": 0,
+      "version": 10,
+      "title": "Pull Request title",
+      "description": "Pull Request description",
+      "state": "MERGED",
+      "open": false,
+      "closed": true,
+      "createdDate": 1582299295157,
+      "updatedDate": 1582728943384,
+      "closedDate": 1582728943384,
+      "fromRef": {
+        "id": "refs/heads/TKT-120-name",
+        "displayId": "TKT-120-name",
+        "latestCommit": "a41c299170334e7642778d32b91d9c425af0ea61",
+        "repository": {
+          "slug": "backend",
+          "id": 0,
+          "name": "backend",
+          "description": "Backend",
+          "scmId": "git",
+          "state": "AVAILABLE",
+          "statusMessage": "Available",
+          "forkable": true,
+          "project": {
+            "key": "PROJECTKEY",
+            "id": 0,
+            "name": "Project",
+            "public": false,
+            "type": "NORMAL",
+            "links": {}
+          },
+          "public": false,
+          "links": {}
+        }
+      },
+      "toRef": {
+        "id": "refs/heads/master",
+        "displayId": "master",
+        "latestCommit": "872d48d4b459bd42b358bc3d104605e53f390d37",
+        "repository": {
+          "slug": "backend",
+          "id": 0,
+          "name": "backend",
+          "description": "Backend",
+          "scmId": "git",
+          "state": "AVAILABLE",
+          "statusMessage": "Available",
+          "forkable": true,
+          "project": {
+            "key": "PROJECTKEY",
+            "id": 0,
+            "name": "Project",
+            "public": false,
+            "type": "NORMAL",
+            "links": {}
+          },
+          "public": false,
+          "links": {}
+        }
+      },
+      "locked": false,
+      "author": {
+        "user": {
+          "name": "user",
+          "emailAddress": "user@nowhere.com",
+          "id": 0,
+          "displayName": "user",
+          "active": true,
+          "slug": "user",
+          "type": "NORMAL",
+          "links": {}
+        },
+        "role": "AUTHOR",
+        "approved": false,
+        "status": "UNAPPROVED"
+      },
+      "reviewers": [
+        {
+          "user": {
+            "name": "otheruser",
+            "emailAddress": "otheruser@nowhere.com",
+            "id": 0,
+            "displayName": "ouser",
+            "active": true,
+            "slug": "user",
+            "type": "NORMAL",
+            "links": {}
+          },
+          "lastReviewedCommit": "a41c299170334e7642778d32b91d9c425af0ea61",
+          "role": "REVIEWER",
+          "approved": true,
+          "status": "APPROVED"
+        }
+      ],
+      "participants": [],
+      "properties": {
+        "resolvedTaskCount": 0,
+        "commentCount": 11,
+        "openTaskCount": 0
+      },
+      "links": {}
+    }
+  ],
+  "start": 0
+}
