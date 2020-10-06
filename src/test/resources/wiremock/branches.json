@@ -1,0 +1,32 @@
+{
+  "size": 5,
+  "limit": 1000,
+  "isLastPage": true,
+  "values": [
+    {
+      "id": "refs/heads/master",
+      "displayId": "master",
+      "type": "BRANCH",
+      "latestCommit": "efc64c0ab8a69c649c39baa5c6b35db040d3f3fd",
+      "latestChangeset": "efc64c0ab8a69c649c39baa5c6b35db040d3f3fd",
+      "isDefault": true
+    },
+    {
+      "id": "refs/heads/feature/TKT-139-name",
+      "displayId": "feature/TKT-139-name",
+      "type": "BRANCH",
+      "latestCommit": "4473dd34e9531a098ba41e5727523a0f63b42828",
+      "latestChangeset": "4473dd34e9531a098ba41e5727523a0f63b42828",
+      "isDefault": false
+    },
+    {
+      "id": "refs/heads/feature/TKT-140-name",
+      "displayId": "feature/TKT-140-name",
+      "type": "BRANCH",
+      "latestCommit": "65fb39a37bc63edea0af6b354bca1fc63427f811",
+      "latestChangeset": "65fb39a37bc63edea0af6b354bca1fc63427f811",
+      "isDefault": false
+    }
+  ],
+  "start": 0
+}

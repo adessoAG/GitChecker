@@ -1,0 +1,16 @@
+{
+  "size": 1,
+  "limit": 25,
+  "isLastPage": true,
+  "values": [
+    {
+      "key": "PROJECTKEY",
+      "id": 0,
+      "name": "Project",
+      "public": false,
+      "type": "NORMAL",
+      "links": {}
+    }
+  ],
+  "start": 0
+}

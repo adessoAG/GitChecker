@@ -1,0 +1,20 @@
+{
+  "slug": "backend",
+  "id": 0,
+  "name": "backend",
+  "description": "Backend",
+  "scmId": "git",
+  "state": "AVAILABLE",
+  "statusMessage": "Available",
+  "forkable": true,
+  "project": {
+    "key": "PROJECTKEY",
+    "id": 0,
+    "name": "Project",
+    "public": false,
+    "type": "NORMAL",
+    "links": {}
+  },
+  "public": false,
+  "links": {}
+}

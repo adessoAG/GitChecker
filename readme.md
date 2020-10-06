@@ -34,9 +34,9 @@ An example of the configuration file looks like this:
     "branchNamingPatterns": {
       "MASTER": "master",
       "DEVELOP": "dev",
-      "FEATURE": "feature\/{1,4}[a-zA-Z\\-]+",
-      "BUGFIX": "bugfix\/{1,4}[a-zA-Z\\-]+",
-      "DEVELOPER": "task\/{1,4}[a-zA-Z\\-]+"
+      "FEATURE": "feature\/TKT[0-9]{1,4}[a-zA-Z\\-]+",
+      "BUGFIX": "bugfix\/TKT[0-9]{1,4}[a-zA-Z\\-]+",
+      "DEVELOPER": "task\/TKT[0-9]{1,4}[a-zA-Z\\-]+"
     },
     "allowedBranchOrigins": {
       "DEVELOP": ["MASTER"],

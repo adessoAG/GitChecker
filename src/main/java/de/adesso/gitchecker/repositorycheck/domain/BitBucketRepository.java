@@ -3,6 +3,7 @@ package de.adesso.gitchecker.repositorycheck.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class BitBucketRepository {
     private String name;
     private String description;
     @JsonIgnore
+    @ToString.Exclude
     private BitBucketProject project;
     private Map<String, Commit> commits = new HashMap<>();
     private Map<String, Commit> branchPointCommits = new HashMap<>();

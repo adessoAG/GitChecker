@@ -1,0 +1,48 @@
+{
+  "size": 2,
+  "limit": 25,
+  "isLastPage": true,
+  "values": [
+    {
+      "slug": "backend",
+      "id": 1,
+      "name": "backend",
+      "description": "Backend",
+      "scmId": "git",
+      "state": "AVAILABLE",
+      "statusMessage": "Available",
+      "forkable": true,
+      "project": {
+        "key": "PROJECTKEY",
+        "id": 0,
+        "name": "Project",
+        "public": false,
+        "type": "NORMAL",
+        "links": {}
+      },
+      "public": false,
+      "links": {}
+    },
+    {
+      "slug": "frontend",
+      "id": 0,
+      "name": "frontend",
+      "description": "Frontend",
+      "scmId": "git",
+      "state": "AVAILABLE",
+      "statusMessage": "Available",
+      "forkable": true,
+      "project": {
+        "key": "PROJECTKEY",
+        "id": 0,
+        "name": "Project",
+        "public": false,
+        "type": "NORMAL",
+        "links": {}
+      },
+      "public": false,
+      "links": {}
+    }
+  ],
+  "start": 0
+}
