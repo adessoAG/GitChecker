@@ -86,3 +86,19 @@ ILLEGAL_NAMING
 No pattern matches branch: refactor/code-aligning
 No pattern matches branch: TKT-45-parsing-events
 ```
+
+## Return codes
+| Code | Meaning                                            |
+| :--- | :------------------------------------------------- |
+| 0    | Repository is fine                                 |
+| 1    | Configfile not recognized                          |
+| 2    | Ruleset couldn't be parsed from configfile         |
+| 3    | Configfile is inconsistent                         |
+| 4    | Target resource couldn't be parsed from configfile |
+| 5    | Project couldn't be loaded from Server             |
+| 6    | Repository couldn't be loaded from Server          |
+| 7    | Branches couldn't be loaded from Server            |
+| 8    | Pull Requests couldn't be loaded from Server       |
+| 9    | Commits couldn't be loaded from Server             |
+| 10   | Parsed rules being broken                          |
+| 11   | Authentication failed                              |
