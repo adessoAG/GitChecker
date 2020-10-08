@@ -1,6 +1,6 @@
 {
   "resources": {
-    "serverURL": "http://localhost",
+    "serverURL": "http://localhost:8081",
     "project": "PROJECTKEY",
     "targetRepository": "backend"
   },

@@ -35,7 +35,7 @@ public class BitBucketServerDummy {
     private WireMockServer mockServer;
 
     public void init() {
-        mockServer = new WireMockServer(80);
+        mockServer = new WireMockServer(8081);
         mockServer.start();
         stubProject();
         stubRepositories();
