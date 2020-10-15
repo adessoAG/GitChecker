@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+
 @Component
 @RequiredArgsConstructor
 public class CheckBranchOrigin implements CheckRuleUseCase {
@@ -21,6 +23,7 @@ public class CheckBranchOrigin implements CheckRuleUseCase {
     @Override
     public Map<IssueType, List<Issue>> check(BitBucketRepository repository) {
         List<Issue> issues =  repository.getBranches().values().stream()
+                .filter(branch -> nonNull(branch.getParentBranch()))
                 .filter(this::isValidBranch)
                 .map(this::checkBranchOrigin)
                 .filter(Objects::nonNull)
