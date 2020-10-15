@@ -34,7 +34,7 @@ public class CheckBranchNamingPattern implements CheckRuleUseCase {
 
     private Issue checkBranchName(Branch branch) {
         for (Map.Entry<String, Pattern> entry : ruleset.getBranchNamingPatterns().entrySet()) {
-            if (branchNameMatchesPattern(branch, entry.getValue())) {
+             if (branchNameMatchesPattern(branch, entry.getValue())) {
                 branch.setBranchType(entry.getKey());
                 return null;
             }

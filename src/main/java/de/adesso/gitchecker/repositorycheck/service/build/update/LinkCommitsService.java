@@ -36,7 +36,11 @@ public class LinkCommitsService implements LinkCommitsUseCase {
 
     private ArrayList<Commit> getParents(Commit commit, Map<String, Commit> commits) {
         ArrayList<Commit> parents = new ArrayList<>();
-        commit.getParentCommits().forEach(parent -> parents.add(commits.get(parent.getId())));
+        commit.getParentCommits().forEach(parent -> {
+            if (commits.containsKey(parent.getId())) {
+                parents.add(commits.get(parent.getId()));
+            }
+        });
         return parents;
     }
 

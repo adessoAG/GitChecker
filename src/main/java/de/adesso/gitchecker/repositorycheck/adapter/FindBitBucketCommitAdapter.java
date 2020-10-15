@@ -3,6 +3,7 @@ package de.adesso.gitchecker.repositorycheck.adapter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketPagingResponse;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketRepository;
+import de.adesso.gitchecker.repositorycheck.domain.Branch;
 import de.adesso.gitchecker.repositorycheck.domain.Commit;
 import de.adesso.gitchecker.repositorycheck.port.driven.FindBitBucketCommitPort;
 import de.adesso.gitchecker.repositorycheck.utils.ExitUtils;
@@ -20,7 +21,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FindBitBucketCommitAdapter implements FindBitBucketCommitPort {
 
-    @Value("${webclient.requestSize}")
+    @Value("${webclient.requestSize.commits}")
     private Integer requestSize;
 
     private final WebUtils webUtils;
@@ -84,6 +85,31 @@ public class FindBitBucketCommitAdapter implements FindBitBucketCommitPort {
         return commits;
     }
 
+    @Override
+    public Map<String, Commit> byBranches(BitBucketRepository repository) {
+        Map<String, Commit> commits = new HashMap<>();
+        repository.getBranches().values().forEach(branch ->
+                byBranch(branch, commits, repository)
+        );
+        return commits;
+    }
+
+    @Override
+    public Map<String, Commit> byBranch(Branch branch, BitBucketRepository repository) {
+        Map<String, Commit> commits = new HashMap<>();
+        return byBranch(branch, commits, repository);
+    }
+
+    private Map<String, Commit> byBranch(Branch branch, Map<String, Commit> commits, BitBucketRepository repository) {
+        Commit commit = branch.getLatestCommit();
+        commit = getFromMapOrFetch(commit, commits, repository);
+        while (commit.getParentCommits().size() > 0) {
+            commit = commit.getParentCommits().get(0);
+            commit = getFromMapOrFetch(commit, commits, repository);
+        }
+        return commits;
+    }
+
     private Commit byId(BitBucketRepository repository, String commitId) {
         try {
             Mono<ClientResponse> response = client.get()
@@ -97,5 +123,14 @@ public class FindBitBucketCommitAdapter implements FindBitBucketCommitPort {
             ExitUtils.commitsNotFetched();
         }
         return null;
+    }
+
+    private Commit getFromMapOrFetch(Commit commit, Map<String, Commit> commits, BitBucketRepository repository) {
+        if (commits.containsKey(commit.getId())) {
+            return commits.get(commit.getId());
+        }
+        commit = byId(repository, commit.getId());
+        commits.put(commit.getId(), commit);
+        return commit;
     }
 }

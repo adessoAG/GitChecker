@@ -32,11 +32,11 @@ An example of the configuration file looks like this:
 
   "rules": {
     "branchNamingPatterns": {
-      "MASTER": "master",
-      "DEVELOP": "dev",
-      "FEATURE": "feature\/TKT[0-9]{1,4}[a-zA-Z\\-]+",
-      "BUGFIX": "bugfix\/TKT[0-9]{1,4}[a-zA-Z\\-]+",
-      "DEVELOPER": "task\/TKT[0-9]{1,4}[a-zA-Z\\-]+"
+      "MASTER": "^master$",
+      "DEVELOP": "^dev$",
+      "FEATURE": "feature\/TKT-[0-9]{1,4}-[a-zA-Z\\-]+",
+      "BUGFIX": "bugfix\/TKT-[0-9]{1,4}-[a-zA-Z\\-]+",
+      "DEVELOPER": "task\/TKT-[0-9]{1,4}-[a-zA-Z\\-]+"
     },
     "allowedBranchOrigins": {
       "DEVELOP": ["MASTER"],
@@ -67,8 +67,16 @@ An exception to this is the value "ORIGIN" you can use in the "allowedBranchMerg
 To run the program you can either have the config file in the same directory as the tool or pass the location of it as an argument with ```--configfile=/path/to/configfile.json```.
 
 Besides to the configfile you need to pass credentials for accessing the repository as an command line argument.
-Example:
-```java -jar git-checker-1.0.0.jar --user=Foo --password=Bar --configfile=./Baz.json```
+
+Optionally you can pass arguments to the application to control the amount of fetched elements per request.
+To alter the number of fetched commits (default is 1000) pass the argument ```--webclient.requestSize.commits=2000```.
+The number per request of every other element (branches, pull requests...) (default is 50) is controlled by ```--webclient.requestSize=100```.
+
+Please note that the size of the codecs buffer may not be enough to handle very high numbers of elements.
+You can change the buffersize by the argument ```--webclient.codec.buffersize=4```, where the number means the size in MB (default is 2).
+
+Every parameter example:
+```java -jar git-checker-1.0.0.jar --user=Foo --password=Bar --configfile=./Baz.json --webclient.requestSize.commits=2000 --webclient.requestSize=100 --webclient.codec.buffersize=4```
 
 ## Results
 The output is grouped by the type of rule violation:

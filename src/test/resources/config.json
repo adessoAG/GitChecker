@@ -7,8 +7,8 @@
 
   "rules": {
     "branchNamingPatterns": {
-      "MASTER": "master",
-      "DEVELOP": "dev",
+      "MASTER": "^master$",
+      "DEVELOP": "^dev$",
       "FEATURE": "feature\/TKT[0-9]{1,4}[a-zA-Z\\-]+",
       "BUGFIX": "bugfix\/TKT[0-9]{1,4}[a-zA-Z\\-]+",
       "DEVELOPER": "task\/TKT[0-9]{1,4}[a-zA-Z\\-]+"
