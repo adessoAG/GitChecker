@@ -6,6 +6,7 @@ import de.adesso.gitchecker.repositorycheck.utils.CheckUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,14 +23,17 @@ public class CheckBranchOrigin implements CheckRuleUseCase {
 
     @Override
     public Map<IssueType, List<Issue>> check(BitBucketRepository repository) {
-        List<Issue> issues =  repository.getBranches().values().stream()
-                .filter(branch -> nonNull(branch.getParentBranch()))
-                .filter(this::isValidBranch)
-                .map(this::checkBranchOrigin)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        if (isCheckRequired()) {
+            List<Issue> issues =  repository.getBranches().values().stream()
+                    .filter(branch -> nonNull(branch.getParentBranch()))
+                    .filter(this::isValidBranch)
+                    .map(this::checkBranchOrigin)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
 
-        return CheckUtils.issueMap(responsibility, issues);
+            return CheckUtils.issueMap(responsibility, issues);
+        }
+        return new HashMap<>();
     }
 
     private Issue checkBranchOrigin(Branch branch) {
@@ -49,5 +53,9 @@ public class CheckBranchOrigin implements CheckRuleUseCase {
     private boolean isBranchOriginAllowed(Branch branch) {
         return ruleset.getAllowedBranchOrigins().containsKey(branch.getBranchType())
                 && ruleset.getAllowedBranchOrigins().get(branch.getBranchType()).contains(branch.getParentBranch().getBranchType());
+    }
+
+    private boolean isCheckRequired() {
+        return nonNull(ruleset.getAllowedBranchOrigins());
     }
 }

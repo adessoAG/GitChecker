@@ -3,6 +3,7 @@ package de.adesso.gitchecker.repositorycheck.service.build.find;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketRepository;
 import de.adesso.gitchecker.repositorycheck.domain.Branch;
 import de.adesso.gitchecker.repositorycheck.domain.Commit;
+import de.adesso.gitchecker.repositorycheck.domain.Ruleset;
 import de.adesso.gitchecker.repositorycheck.port.driven.FindBitBucketCommitPort;
 import de.adesso.gitchecker.repositorycheck.port.driver.FindBitBucketCommitUseCase;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,29 @@ import java.util.Map;
 public class FindBitBucketCommitService implements FindBitBucketCommitUseCase {
 
     private final FindBitBucketCommitPort findCommits;
+    private final Ruleset ruleset;
+
+    @Override
+    public Map<String, Commit> byRulesetConfig(BitBucketRepository repository) {
+        if (ruleset.areAllCommitsRequired()) {
+            return byRepository(repository);
+        }
+
+        Map<String, Commit> commits = byBranches(repository);
+        if (ruleset.getBranchRemovalAfterPRMerge()) {
+            commits.putAll(byPullRequests(repository));
+        }
+        return commits;
+    }
 
     @Override
     public Map<String, Commit> byRepository(BitBucketRepository repository) {
         return findCommits.byRepository(repository);
+    }
+
+    @Override
+    public Map<String, Commit> byPullRequests(BitBucketRepository repository) {
+        return findCommits.byPullRequests(repository);
     }
 
     @Override

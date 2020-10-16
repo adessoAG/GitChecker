@@ -12,4 +12,5 @@ public interface FindBitBucketCommitPort {
     Map<String, Commit> byDistinction(BitBucketRepository repository, Commit from, Commit to);
     Map<String, Commit> byBranches(BitBucketRepository repository);
     Map<String, Commit> byBranch(Branch branch, BitBucketRepository repository);
+    Map<String, Commit> byPullRequests(BitBucketRepository repository);
 }

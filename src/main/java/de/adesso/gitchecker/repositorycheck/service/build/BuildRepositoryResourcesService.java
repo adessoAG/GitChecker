@@ -3,6 +3,7 @@ package de.adesso.gitchecker.repositorycheck.service.build;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketProject;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketRepository;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketResources;
+import de.adesso.gitchecker.repositorycheck.domain.Ruleset;
 import de.adesso.gitchecker.repositorycheck.port.driver.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class BuildRepositoryResourcesService implements BuildRepositoryResources
     private final UpdateBranchMergesUseCase branchMerges;
     private final UpdateBranchParentUseCase branchParents;
     private final UpdateCommitDiffCounterUseCase commitDiffCounters;
+    private final Ruleset ruleset;
 
     @Override
     public void build(BitBucketResources resources) {
@@ -31,8 +33,10 @@ public class BuildRepositoryResourcesService implements BuildRepositoryResources
         repository.copyValues(findRepositories.byProjectAndSlug(project, repository.getSlug()));
 
         repository.setBranches(findBranches.byRepository(repository));
-        repository.setCommits(findCommits.byRepository(repository));
-        repository.setPullRequests(findPullRequests.byRepository(repository));
+        if (ruleset.getBranchRemovalAfterPRMerge()) {
+            repository.setPullRequests(findPullRequests.byRepository(repository));
+        }
+        repository.setCommits(findCommits.byRulesetConfig(repository));
 
         linkCommits.link(repository);
         commitCreatorBranches.update(repository);

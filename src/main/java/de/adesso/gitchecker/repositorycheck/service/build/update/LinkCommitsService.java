@@ -65,8 +65,8 @@ public class LinkCommitsService implements LinkCommitsUseCase {
     }
 
     private boolean arePRCommitsInRepo(PullRequest pr, BitBucketRepository repository) {
-        return repository.getCommits().containsKey(pr.getFrom())
-                && repository.getCommits().containsKey(pr.getTo());
+        return repository.getCommits().containsKey(pr.getFrom().getId())
+                && repository.getCommits().containsKey(pr.getTo().getId());
     }
 
     private void updateBranchingPointCommits(BitBucketRepository repository) {

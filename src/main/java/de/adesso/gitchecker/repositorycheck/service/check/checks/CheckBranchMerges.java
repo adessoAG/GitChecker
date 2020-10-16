@@ -7,9 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Component
 @RequiredArgsConstructor
@@ -20,13 +23,16 @@ public class CheckBranchMerges implements CheckRuleUseCase {
 
     @Override
     public Map<IssueType, List<Issue>> check(BitBucketRepository repository) {
-        List<Issue> issues = repository.getBranches().values().stream()
-                .filter(this::isValidBranch)
-                .map(this::checkBranchMerges)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        if (isCheckRequired()) {
+            List<Issue> issues = repository.getBranches().values().stream()
+                    .filter(this::isValidBranch)
+                    .map(this::checkBranchMerges)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
 
-        return CheckUtils.issueMap(responsibility, issues);
+            return CheckUtils.issueMap(responsibility, issues);
+        }
+        return new HashMap<>();
     }
 
     private List<Issue> checkBranchMerges(Branch branch) {
@@ -65,5 +71,9 @@ public class CheckBranchMerges implements CheckRuleUseCase {
 
     private boolean isDifferentBranch(Branch from, Branch to) {
         return !from.equals(to);
+    }
+
+    private boolean isCheckRequired() {
+        return nonNull(ruleset.getAllowedBranchMerges());
     }
 }

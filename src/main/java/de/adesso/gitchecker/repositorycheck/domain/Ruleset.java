@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.nonNull;
+
 @Data
 public class Ruleset {
 
@@ -20,6 +22,14 @@ public class Ruleset {
 
     public Set<String> branchTypes() {
         return branchNamingPatterns.keySet();
+    }
+
+    public boolean areAllCommitsRequired() {
+        return nonNull(getAllowedBranchMerges()) || nonNull(getAllowedBranchOrigins());
+    }
+
+    public boolean getBranchRemovalAfterPRMerge() {
+        return nonNull(branchRemovalAfterPRMerge) && branchRemovalAfterPRMerge;
     }
 
     @JsonProperty("rules")

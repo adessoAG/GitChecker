@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
 
 @Component
 @RequiredArgsConstructor
@@ -22,13 +25,16 @@ public class CheckBranchStalePeriods implements CheckRuleUseCase {
 
     @Override
     public Map<IssueType, List<Issue>> check(BitBucketRepository repository) {
-        List<Issue> issues = repository.getBranches().values().stream()
-                .filter(this::isValidBranch)
-                .map(this::checkBranchStale)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        if (isCheckRequired()) {
+            List<Issue> issues = repository.getBranches().values().stream()
+                    .filter(this::isValidBranch)
+                    .map(this::checkBranchStale)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
 
-        return CheckUtils.issueMap(responsibility, issues);
+            return CheckUtils.issueMap(responsibility, issues);
+        }
+        return new HashMap<>();
     }
 
     private Issue checkBranchStale(Branch branch) {
@@ -54,5 +60,9 @@ public class CheckBranchStalePeriods implements CheckRuleUseCase {
     private boolean isValidBranch(Branch branch) {
         return !branch.getBranchType().equalsIgnoreCase("REMOVED")
                 && !branch.getBranchType().equalsIgnoreCase("UNKNOWN");
+    }
+
+    private boolean isCheckRequired() {
+        return nonNull(ruleset.getBranchStalePeriods());
     }
 }
