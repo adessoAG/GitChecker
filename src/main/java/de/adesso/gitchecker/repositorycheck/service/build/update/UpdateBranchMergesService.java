@@ -3,15 +3,24 @@ package de.adesso.gitchecker.repositorycheck.service.build.update;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketRepository;
 import de.adesso.gitchecker.repositorycheck.domain.Branch;
 import de.adesso.gitchecker.repositorycheck.domain.Commit;
+import de.adesso.gitchecker.repositorycheck.domain.Ruleset;
 import de.adesso.gitchecker.repositorycheck.port.driver.UpdateBranchMergesUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.nonNull;
+
 @Service
+@RequiredArgsConstructor
 public class UpdateBranchMergesService implements UpdateBranchMergesUseCase {
+
+    private final Ruleset ruleset;
 
     @Override
     public void update(BitBucketRepository repository) {
-        repository.getMergeCommits().values().forEach(this::assignBranchMergesOfMergeCommit);
+        if (areBranchMergesRequired()) {
+            repository.getMergeCommits().values().forEach(this::assignBranchMergesOfMergeCommit);
+        }
     }
 
     private void assignBranchMergesOfMergeCommit(Commit mergeCommit) {
@@ -39,5 +48,9 @@ public class UpdateBranchMergesService implements UpdateBranchMergesUseCase {
 
     private boolean isDifferentBranch(Commit from, Commit to) {
         return !from.getCreatorBranch().equals(to.getCreatorBranch());
+    }
+
+    private boolean areBranchMergesRequired() {
+        return nonNull(ruleset.getAllowedBranchMerges());
     }
 }

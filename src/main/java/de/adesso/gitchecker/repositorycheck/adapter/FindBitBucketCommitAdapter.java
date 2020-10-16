@@ -100,6 +100,16 @@ public class FindBitBucketCommitAdapter implements FindBitBucketCommitPort {
         return byBranch(branch, commits, repository);
     }
 
+    @Override
+    public Map<String, Commit> byPullRequests(BitBucketRepository repository) {
+        Map<String, Commit> commits = new HashMap<>();
+        repository.getPullRequests().forEach(pr -> {
+            commits.put(pr.getFrom().getId(), byId(repository, pr.getFrom().getId()));
+            commits.put(pr.getTo().getId(), byId(repository, pr.getTo().getId()));
+        });
+        return commits;
+    }
+
     private Map<String, Commit> byBranch(Branch branch, Map<String, Commit> commits, BitBucketRepository repository) {
         Commit commit = branch.getLatestCommit();
         commit = getFromMapOrFetch(commit, commits, repository);

@@ -59,6 +59,8 @@ An example of the configuration file looks like this:
   }
 }
 ```
+If you don't need certain checks you can omit related sections (except "branchNamingPatterns") or set them to ```null```.
+
 Please note that you can only use branchtypes you previously declared in the "branchNamingPatterns" section!
 
 An exception to this is the value "ORIGIN" you can use in the "allowedBranchMerges" section to allow merges into the branch of origin.

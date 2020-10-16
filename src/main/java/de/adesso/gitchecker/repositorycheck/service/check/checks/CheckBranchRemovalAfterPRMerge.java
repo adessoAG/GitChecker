@@ -6,7 +6,7 @@ import de.adesso.gitchecker.repositorycheck.utils.CheckUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,17 +21,16 @@ public class CheckBranchRemovalAfterPRMerge implements CheckRuleUseCase {
 
     @Override
     public Map<IssueType, List<Issue>> check(BitBucketRepository repository) {
-        List<Issue> issues = ruleset.getBranchRemovalAfterPRMerge() ?
+        if (ruleset.getBranchRemovalAfterPRMerge()) {
+            List<Issue> issues = repository.getBranches().values().stream()
+                    .filter(this::isValidBranch)
+                    .map(branch -> checkBranchRemovalAfterPRMerges(branch, repository))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
 
-                repository.getBranches().values().stream()
-                        .filter(this::isValidBranch)
-                        .map(branch -> checkBranchRemovalAfterPRMerges(branch, repository))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList())
-
-                : new ArrayList<>();
-
-        return CheckUtils.issueMap(responsibility, issues);
+            return CheckUtils.issueMap(responsibility, issues);
+        }
+        return new HashMap<>();
     }
 
     private Issue checkBranchRemovalAfterPRMerges(Branch branch, BitBucketRepository repository) {

@@ -3,16 +3,25 @@ package de.adesso.gitchecker.repositorycheck.service.build.update;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketRepository;
 import de.adesso.gitchecker.repositorycheck.domain.Branch;
 import de.adesso.gitchecker.repositorycheck.domain.Commit;
+import de.adesso.gitchecker.repositorycheck.domain.Ruleset;
 import de.adesso.gitchecker.repositorycheck.port.driver.UpdateBranchParentUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.nonNull;
+
 @Service
+@RequiredArgsConstructor
 public class UpdateBranchParentService implements UpdateBranchParentUseCase {
+
+    private final Ruleset ruleset;
 
     @Override
     public void update(BitBucketRepository repository) {
-        assignBranchParentsUsingBranchingPoints(repository);
-        assignParentOfBranchesWithoutCommits(repository);
+        if (areBranchParentsRequired()) {
+            assignBranchParentsUsingBranchingPoints(repository);
+            assignParentOfBranchesWithoutCommits(repository);
+        }
     }
 
     private void assignBranchParentsUsingBranchingPoints(BitBucketRepository repository) {
@@ -50,5 +59,9 @@ public class UpdateBranchParentService implements UpdateBranchParentUseCase {
 
     private void assignParentOfBranch(Commit parent, Commit child) {
         child.getCreatorBranch().setParentBranch(parent.getCreatorBranch());
+    }
+
+    private boolean areBranchParentsRequired() {
+        return nonNull(ruleset.getAllowedBranchOrigins());
     }
 }

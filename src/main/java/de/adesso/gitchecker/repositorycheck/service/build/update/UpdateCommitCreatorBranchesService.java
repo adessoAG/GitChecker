@@ -3,7 +3,9 @@ package de.adesso.gitchecker.repositorycheck.service.build.update;
 import de.adesso.gitchecker.repositorycheck.domain.BitBucketRepository;
 import de.adesso.gitchecker.repositorycheck.domain.Branch;
 import de.adesso.gitchecker.repositorycheck.domain.Commit;
+import de.adesso.gitchecker.repositorycheck.domain.Ruleset;
 import de.adesso.gitchecker.repositorycheck.port.driver.UpdateCommitCreatorBranchesUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +15,10 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UpdateCommitCreatorBranchesService implements UpdateCommitCreatorBranchesUseCase {
+
+    private final Ruleset ruleset;
 
     @Override
     public void update(BitBucketRepository repository) {
@@ -57,7 +62,7 @@ public class UpdateCommitCreatorBranchesService implements UpdateCommitCreatorBr
         List<Commit> commits = new ArrayList<>();
         while (hasNoCreatorBranch(commit)) {
             commits.add(commit);
-            commit = commit.getParentCommits().get(0);
+            commit = commit.getParentCommits().size() < 1 ? null : commit.getParentCommits().get(0);
         }
         return commits;
     }
